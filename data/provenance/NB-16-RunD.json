@@ -1,0 +1,208 @@
+{
+  "notebook": "NB-16-eps50-replicates",
+  "seed": 1337,
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "timestamp": "2026-10-25 08:22:29",
+  "transformers": "5.16.1",
+  "numpy": "2.1.3",
+  "attack_eval_csv": "task_b_targets_n100.csv",
+  "targets_sha256": "8711dc56202b33f90e769c9735231b0fa8cf27fcbc20151f5466bcd9cc2b1256",
+  "fixed_eps": null,
+  "bisect_rounds": 5,
+  "queue": [
+    "rung1-s1339",
+    "rung25-s1339"
+  ],
+  "summary": [
+    {
+      "tag": "rung1-s1339",
+      "status": "complete",
+      "n": 100,
+      "asr": 39.0
+    },
+    {
+      "tag": "rung25-s1339",
+      "status": "complete",
+      "n": 100,
+      "asr": 56.99999999999999
+    }
+  ],
+  "wall_hours": 11.0,
+  "session_hours": 2.45,
+  "n_eval": 100,
+  "edit_type": "T5",
+  "probe_steps": 400,
+  "confirm_steps": 800,
+  "batch_size": 8,
+  "lr": 0.0001,
+  "eps_lo": 0.0001,
+  "eps_hi": 0.002,
+  "use_amp": true,
+  "stage2_verdict": "DOMINANT",
+  "stage2_new": [
+    {
+      "tag": "rung1-s1339",
+      "n": 100,
+      "asr": 39.0,
+      "censored": 61,
+      "eps50_ok": 0.0008218389120884,
+      "eps50_imp": 0.002
+    },
+    {
+      "tag": "rung25-s1339",
+      "n": 100,
+      "asr": 57.0,
+      "censored": 43,
+      "eps50_ok": 0.0006815101369284,
+      "eps50_imp": 0.0011951308697462
+    }
+  ],
+  "stage2_sigma_pp": 16.374976083109548,
+  "stage2_within_rung_pairs": [
+    {
+      "rung": 1,
+      "run_a": "s1337 final",
+      "run_b": "s1337 run2",
+      "asr_a": 75.0,
+      "asr_b": 41.0,
+      "delta_pp": -34.0,
+      "n10": 42,
+      "n01": 8,
+      "n": 100,
+      "mcnemar_p": 1.163555804595262e-06
+    },
+    {
+      "rung": 1,
+      "run_a": "s1337 final",
+      "run_b": "s1338",
+      "asr_a": 75.0,
+      "asr_b": 57.0,
+      "delta_pp": -18.0,
+      "n10": 30,
+      "n01": 12,
+      "n": 100,
+      "mcnemar_p": 0.007915897334896727
+    },
+    {
+      "rung": 1,
+      "run_a": "s1337 final",
+      "run_b": "s1339",
+      "asr_a": 75.0,
+      "asr_b": 39.0,
+      "delta_pp": -36.0,
+      "n10": 44,
+      "n01": 8,
+      "n": 100,
+      "mcnemar_p": 4.0393217393130953e-07
+    },
+    {
+      "rung": 1,
+      "run_a": "s1337 run2",
+      "run_b": "s1338",
+      "asr_a": 41.0,
+      "asr_b": 57.0,
+      "delta_pp": 16.0,
+      "n10": 14,
+      "n01": 30,
+      "n": 100,
+      "mcnemar_p": 0.022628841205914796
+    },
+    {
+      "rung": 1,
+      "run_a": "s1337 run2",
+      "run_b": "s1339",
+      "asr_a": 41.0,
+      "asr_b": 39.0,
+      "delta_pp": -2.0,
+      "n10": 15,
+      "n01": 13,
+      "n": 100,
+      "mcnemar_p": 0.8505540192127228
+    },
+    {
+      "rung": 1,
+      "run_a": "s1338",
+      "run_b": "s1339",
+      "asr_a": 57.0,
+      "asr_b": 39.0,
+      "delta_pp": -18.0,
+      "n10": 32,
+      "n01": 14,
+      "n": 100,
+      "mcnemar_p": 0.011351591436778108
+    },
+    {
+      "rung": 5,
+      "run_a": "s1337 final",
+      "run_b": "s1338",
+      "asr_a": 79.0,
+      "asr_b": 96.0,
+      "delta_pp": 17.0,
+      "n10": 4,
+      "n01": 21,
+      "n": 100,
+      "mcnemar_p": 0.0009105205535888672
+    },
+    {
+      "rung": 5,
+      "run_a": "s1337 final",
+      "run_b": "s1339",
+      "asr_a": 79.0,
+      "asr_b": 59.0,
+      "delta_pp": -20.0,
+      "n10": 30,
+      "n01": 10,
+      "n": 100,
+      "mcnemar_p": 0.0022214337732293643
+    },
+    {
+      "rung": 5,
+      "run_a": "s1338",
+      "run_b": "s1339",
+      "asr_a": 96.0,
+      "asr_b": 59.0,
+      "delta_pp": -37.0,
+      "n10": 39,
+      "n01": 2,
+      "n": 100,
+      "mcnemar_p": 7.839844329282641e-10
+    },
+    {
+      "rung": 25,
+      "run_a": "s1337 final",
+      "run_b": "s1338",
+      "asr_a": 66.0,
+      "asr_b": 78.0,
+      "delta_pp": 12.0,
+      "n10": 6,
+      "n01": 18,
+      "n": 100,
+      "mcnemar_p": 0.022655844688415527
+    },
+    {
+      "rung": 25,
+      "run_a": "s1337 final",
+      "run_b": "s1339",
+      "asr_a": 66.0,
+      "asr_b": 57.0,
+      "delta_pp": -9.0,
+      "n10": 18,
+      "n01": 9,
+      "n": 100,
+      "mcnemar_p": 0.12207812070846558
+    },
+    {
+      "rung": 25,
+      "run_a": "s1338",
+      "run_b": "s1339",
+      "asr_a": 78.0,
+      "asr_b": 57.0,
+      "delta_pp": -21.0,
+      "n10": 27,
+      "n01": 6,
+      "n": 100,
+      "mcnemar_p": 0.0003240634687244892
+    }
+  ]
+}
