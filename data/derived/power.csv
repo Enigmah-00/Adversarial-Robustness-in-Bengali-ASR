@@ -1,0 +1,4 @@
+rung,exposure_ratio,effect_pp,runs_needed,runs_raw,runs_lo,runs_hi
+1,40x,38.0,6,5.06,1.6,36.9
+5,16x,33.0,7,6.71,2.1,49.0
+25,4x,13.0,44,43.23,13.7,315.4

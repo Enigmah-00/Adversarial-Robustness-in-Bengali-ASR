@@ -1,0 +1,61 @@
+{
+  "notebook": "NB-05e-queue-runner",
+  "seed": 1337,
+  "gpu": "Tesla T4",
+  "torch": "2.10.0+cu128",
+  "timestamp": "2026-09-30 16:10:26",
+  "transformers": "5.0.0",
+  "numpy": "2.0.2",
+  "attack_eval_csv": "task_b_targets_n100.csv",
+  "targets_sha256": "8711dc56202b33f90e769c9735231b0fa8cf27fcbc20151f5466bcd9cc2b1256",
+  "fixed_eps": null,
+  "bisect_rounds": 5,
+  "queue": [
+    "rung1-trajfinal",
+    "rung100-final"
+  ],
+  "summary": [
+    {
+      "tag": "rung1-trajfinal",
+      "status": "complete",
+      "n": 100,
+      "asr": 41.0
+    },
+    {
+      "tag": "rung100-final",
+      "status": "partial",
+      "n": 80,
+      "asr": 46.25
+    }
+  ],
+  "wall_hours": 11.0,
+  "session_hours": 11.38,
+  "n_eval": 100,
+  "edit_type": "T5",
+  "probe_steps": 400,
+  "confirm_steps": 800,
+  "batch_size": 8,
+  "lr": 0.0001,
+  "eps_lo": 0.0001,
+  "eps_hi": 0.002,
+  "use_amp": true,
+  "stage2_verdict": "DOMINANT",
+  "stage2_new": [
+    {
+      "tag": "rung1-trajfinal",
+      "n": 100,
+      "asr": 41.0,
+      "censored": 59,
+      "eps50_ok": 0.0009457416017539,
+      "eps50_imp": 0.002
+    },
+    {
+      "tag": "rung100-final",
+      "n": 80,
+      "asr": 46.25,
+      "censored": 43,
+      "eps50_ok": 0.0006815101369284,
+      "eps50_imp": 0.002
+    }
+  ]
+}

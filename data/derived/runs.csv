@@ -1,0 +1,14 @@
+run,rung,hours,wer,group,env,trun,n,asr,source
+1h final,1,0.98,0.6355,rung1-final,tf4.44.2,1h-r1,100,75.0,published
+1h run2,1,0.98,0.6251,rung1-final,tf4.44.2,1h-r2,100,41.0,published
+1h s1338,1,0.98,0.5905420991926182,rung1-final,tf5.16.1,1h-s1338,100,56.99999999999999,replicate
+1h s1339,1,0.98,0.6239907727797002,rung1-final,tf5.16.1,1h-s1339,100,39.0,replicate
+5h final,5,4.9,0.4233,rung5-final,tf4.44.2,5h-r1,100,79.0,published
+5h s1338,5,4.9,0.4152249134948096,rung5-final,tf5.16.1,5h-s1338,100,96.0,replicate
+5h s1339,5,4.9,0.4186851211072664,rung5-final,tf5.16.1,5h-s1339,100,59.0,replicate
+25h final,25,24.6,0.3114,rung25-final,tf4.44.2,25h-r1,100,66.0,published
+25h s1338,25,24.6,0.2987312572087658,rung25-final,tf5.16.1,25h-s1338,100,78.0,replicate
+25h s1339,25,24.6,0.2906574394463668,rung25-final,tf5.16.1,25h-s1339,100,56.99999999999999,replicate
+100h ms-1000,100,38.8,0.6943,,tf4.44.2,100h-r1,100,37.0,published
+100h ms-2000,100,77.7,0.4752,,tf4.44.2,100h-r1,100,46.0,published
+100h ms-3500,100,98.02,0.3449,,tf4.44.2,100h-r1,100,53.0,published

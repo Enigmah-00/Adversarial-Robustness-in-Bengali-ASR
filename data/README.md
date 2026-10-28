@@ -44,6 +44,8 @@ Each file reproduces the attack-success figure reported in the paper:
 | `eps50_rung5-s1339_T5_n100.csv` | 59.0% |
 | `eps50_rung25-s1338_T5_n100.csv` | 78.0% |
 | `eps50_rung25-s1339_T5_n100.csv` | 57.0% |
+| `eps50_rung1-trajfinal_T5_n100.csv` | 41.0% |
+| `eps50_rung100-final_T5_n100.csv` | 46.25% (80 of 100 utterances) |
 
 Attack success is the share of rows with `censored == False`:
 
@@ -59,9 +61,10 @@ print(100 * (len(cens) - sum(cens)) / len(cens))   # 96.0
 `eps50_rung1-traj-SECOND-MEASUREMENT_T5_n100.csv` is a **second measurement of
 a model the paper already reports**, and it is named to make that obvious.
 
-The paper's 1-hour "re-run" row reports **41.0%** attack success. That number
-comes from a later measurement of the same checkpoint. The file here is an
-earlier measurement of the *same weights*, giving **61.0%**.
+The paper's 1-hour "re-run" row reports **41.0%** attack success, and that file
+is here too as `eps50_rung1-trajfinal_T5_n100.csv`. The
+`SECOND-MEASUREMENT` file is an earlier measurement of the *same weights*,
+giving **61.0%**.
 
 Both are included because hiding the disagreement would be worse than reporting
 it. Two attacks on one checkpoint, 20 points apart, is itself evidence about
@@ -77,13 +80,31 @@ measured twice, not two conditions.
 > result. Any analysis that looks results up by filename alone will silently
 > take whichever mounted first. It is renamed here to prevent that.
 
-## Still to be added
+## Clean word error rates
 
-- `eps50_rung1-trajfinal_T5_n100.csv` — the 41.0% measurement that *is* a paper
-  row. Lives in the NB-12 notebook output.
-- `clean_wer_replicates.csv` from `clean-wer-replicates-a` and `-b`, the ANCOVA
-  covariates.
-- NB-17 outputs: `runs.csv`, `sigma.csv`, `power.csv`, `variance_by_group.csv`.
+`clean_wer_replicates_a.csv` and `_b.csv` hold clean WER on the same 100
+attacked utterances for every checkpoint. This is the covariate in the paper's
+analysis of covariance. The two files overlap on `ckpt-xlsr-1h`, which was
+scored in both runs as a cross-check and gives 0.6355 in each.
+
+## Derived tables
+
+`derived/` holds the output of `NB-17-variance-components`, which is what the
+paper's tables are built from:
+
+| file | |
+|---|---|
+| `runs.csv` | all 13 attacked checkpoints with exposure, clean WER and attack success |
+| `sigma.csv` | between-run standard deviation: raw 20.279, bias-corrected 21.574, 4 d.f., 95% CI [12.15, 58.27] |
+| `variance_by_group.csv` | the four replicate pairs behind that figure |
+| `power.csv` | runs required per condition: 6, 7 and 44 for effects of 38, 33 and 13 points |
+| `tables.tex` | the same numbers as LaTeX, including the pooled fit |
+
+The pooled fit recorded in `tables.tex`:
+
+```
+beta1 = +0.0986  CI [+0.0302, +0.1670]  (G=11 training runs, N=1300, df=10)
+```
 
 ## Schema
 

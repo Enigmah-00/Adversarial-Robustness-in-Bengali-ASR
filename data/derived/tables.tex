@@ -1,0 +1,24 @@
+% --- Table: every run, grouped by exposure ---
+\begin{tabular}{llrrrr}
+\toprule
+Run & env & exposure (h) & clean WER & ASR & $n$ \\
+\midrule
+1h final & tf4.44.2 & 0.98 & 0.6355 & 75.0\% & 100 \\
+1h run2 & tf4.44.2 & 0.98 & 0.6251 & 41.0\% & 100 \\
+1h s1338 & tf5.16.1 & 0.98 & 0.5905 & 57.0\% & 100 \\
+1h s1339 & tf5.16.1 & 0.98 & 0.6240 & 39.0\% & 100 \\
+5h final & tf4.44.2 & 4.90 & 0.4233 & 79.0\% & 100 \\
+5h s1338 & tf5.16.1 & 4.90 & 0.4152 & 96.0\% & 100 \\
+5h s1339 & tf5.16.1 & 4.90 & 0.4187 & 59.0\% & 100 \\
+25h final & tf4.44.2 & 24.60 & 0.3114 & 66.0\% & 100 \\
+25h s1338 & tf5.16.1 & 24.60 & 0.2987 & 78.0\% & 100 \\
+25h s1339 & tf5.16.1 & 24.60 & 0.2907 & 57.0\% & 100 \\
+100h ms-1000 & tf4.44.2 & 38.80 & 0.6943 & 37.0\% & 100 \\
+100h ms-2000 & tf4.44.2 & 77.70 & 0.4752 & 46.0\% & 100 \\
+100h ms-3500 & tf4.44.2 & 98.02 & 0.3449 & 53.0\% & 100 \\
+\bottomrule
+\end{tabular}
+
+% between-run sigma = 21.57 pp (bias-corrected, c4), raw pooled sd 20.28, df 4, 95% CI [12.15, 58.27]
+
+% ANCOVA clustered on the TRAINING RUN: beta1 = +0.0986 CI [+0.0302, +0.1670] (G=11 training runs, N=1300, df=10)
