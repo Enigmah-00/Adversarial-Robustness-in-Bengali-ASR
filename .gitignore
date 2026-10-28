@@ -1,0 +1,16 @@
+# result files pulled from Kaggle (see data/README.md)
+data/results/*.csv
+!data/results/eps50_rung100_milestone-3500_T5_n100.csv
+
+# model checkpoints are never committed
+*.safetensors
+*.bin
+*.pt
+ckpt*/
+
+# local
+.DS_Store
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+kaggle.json

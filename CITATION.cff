@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite the paper."
+title: >-
+  One Training Run Is Not Enough: Measuring How Training-Data Volume
+  Affects Adversarial Robustness in Low-Resource Speech Recognition
+authors:
+  - family-names: Qurishi
+    given-names: Mahdi Hasan
+    affiliation: >-
+      Department of Computer Science and Engineering, Shahjalal University
+      of Science and Technology
+  - family-names: Abedin
+    given-names: Umme Zoayria
+    affiliation: >-
+      Department of Computer Science and Engineering, Shahjalal University
+      of Science and Technology
+  - family-names: Hossain
+    given-names: A.K.M. Fakhrul
+    affiliation: >-
+      Department of Computer Science and Engineering, Shahjalal University
+      of Science and Technology
+year: 2026
+repository-code: "https://github.com/Enigmah-00/Adversarial-Robustness-in-Bengali-ASR"
+license: MIT
+keywords:
+  - adversarial examples
+  - automatic speech recognition
+  - low-resource languages
+  - replication
+  - statistical power
+  - Bengali
