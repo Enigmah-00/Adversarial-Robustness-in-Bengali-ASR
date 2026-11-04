@@ -20,8 +20,10 @@ checkpoints and for anyone who wants the original dataset pages.
 | `mahdihasanqurishi/ckpt-xlsr-5h-s1339` | 5 h replicate |
 | `mahdihasanqurishi/ckpt-xlsr-25h-s1338` | 25 h replicate |
 | `mahdihasanqurishi/ckpt-xlsr-25h-s1339` | 25 h replicate |
+| `mahdihasanqurishi/ckpt-xlsr-100h-s1338` | 100 h replicate, seed 1338, with milestones at steps 1000, 2000 and 3500 |
 
-Ten training runs. The 100-hour rung is the one that was not replicated.
+Twelve training runs: four at 1 hour, three each at 5 and 25 hours, and two at
+100 hours.
 
 ## Splits
 
@@ -45,6 +47,12 @@ mahdihasanqurishi/eps50-queue-n100
 mahdihasanqurishi/clean-wer-replicates-a
 mahdihasanqurishi/clean-wer-replicates-b
 ```
+
+The 100-hour replicate was attacked in three NB-21 sessions.
+`mahdihasanqurishi/eps50-s1338-ms1000-ms2000partial-n100` holds the full
+`ms1000` result and an **80-row partial** of `ms2000`; the complete 100-row
+`ms2000` and `ms3500` files are the ones committed in `data/results/`. Do not
+attach the partial beside the complete file.
 
 The four `NB-16-eps50-replicates` runs were saved as notebook outputs rather
 than datasets; reach them from the notebook pages.
