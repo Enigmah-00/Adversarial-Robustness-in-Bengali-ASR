@@ -1,0 +1,262 @@
+
+==============================================================================
+  0 - data, and a check that each file carries the ASR the paper reports
+==============================================================================
+
+  100-hour replicate EXCLUDED: reproducing the 2026-10-29 output.
+  1h final       n=100  ASR  75.0%  (paper  75.0)  ok
+  1h run2        n=100  ASR  41.0%  (paper  41.0)  ok
+  1h s1338       n=100  ASR  57.0%  (paper  57.0)  ok
+  1h s1339       n=100  ASR  39.0%  (paper  39.0)  ok
+  5h final       n=100  ASR  79.0%  (paper  79.0)  ok
+  5h s1338       n=100  ASR  96.0%  (paper  96.0)  ok
+  5h s1339       n=100  ASR  59.0%  (paper  59.0)  ok
+  25h final      n=100  ASR  66.0%  (paper  66.0)  ok
+  25h s1338      n=100  ASR  78.0%  (paper  78.0)  ok
+  25h s1339      n=100  ASR  57.0%  (paper  57.0)  ok
+  100h ms-1000   n=100  ASR  37.0%  (paper  37.0)  ok
+  100h ms-2000   n=100  ASR  46.0%  (paper  46.0)  ok
+  100h ms-3500   n=100  ASR  53.0%  (paper  53.0)  ok
+
+  All 13 conditions reproduce the published attack-success figures.
+
+==============================================================================
+  1 - how much of sigma is the ATTACK, not the training?
+==============================================================================
+
+  The published sigma treats every difference between two runs of one condition
+  as training variance. It is not: each run was attacked once, so the figure also
+  contains the variance of the attack itself. Where the same weights were
+  attacked twice, that component is directly visible.
+
+  1h run2        same weights, attacked twice: 41.0% and 61.0%  ->  20.0 pp apart
+
+  attack-measurement sd = 14.14 pp raw, 17.72 pp bias-corrected (df 1)
+  df 1 is ONE pair. The point estimate is near-worthless on its own; what
+  it establishes is that the component is not negligible.
+
+--- implied split, total sigma = 21.574 pp ----------------------------------
+  attack sd | training sd | share of VARIANCE that is attack noise
+      8.0 pp |    20.04 pp  |   14%
+     12.0 pp |    17.93 pp  |   31%
+     17.7 pp |    12.30 pp  |   67%   <- measured, df 1
+     16.0 pp |    14.47 pp  |   55%
+     20.0 pp |     8.09 pp  |   86%
+
+  Read sigma as an UPPER BOUND on run-to-run variance. The two-run contrast that
+  the matched pairs rely on still carries sigma*sqrt(2) = 30.51 pp whichever way
+  the split falls, so the negative result does not depend on the decomposition --
+  but the attribution to "retraining" does, and cannot be sustained.
+
+==============================================================================
+  2 - sigma depends on the pooling choice; here are all three
+==============================================================================
+  pooling                                  raw sd   df     sigma sigma*sqrt2
+  within (group, environment)  [reported]  20.279    4   21.574      30.51
+  by rung, pooling environments           15.802    7   16.375      23.16
+  seed-contrast groups only               18.859    3   20.470      28.95
+
+  Each matched-pair effect against each noise estimate:
+  pooling                                40x/38pp 16x/33pp  4x/13pp
+  within (group, environment)  [reported]    1.25x    1.08x    0.43x
+  by rung, pooling environments             1.64x    1.43x    0.56x
+  seed-contrast groups only                 1.31x    1.14x    0.45x
+
+  No pair reaches 2x the noise under any choice, so "not distinguishable" holds
+  throughout -- but it holds by a wide margin under the reported estimate and a
+  narrow one under the by-rung estimate. The correct wording is "cannot be
+  distinguished given our noise estimate", not "is noise".
+
+  The by-rung estimate has more df and is the more efficient one. It is not the
+  headline because each pair it adds differs in LIBRARY VERSION as well as in
+  run, so it mixes run-to-run variance with a 4.44.2-to-5.16.1 difference. That
+  is a real reason, and it is now stated rather than left implicit.
+
+==============================================================================
+  3 - log10(eps50) ~ log10(exposure) + clean WER, clustered on the training run
+==============================================================================
+  n = 1300 utterance observations, G = 11 training-run clusters
+  beta1 = +0.0986 per decade   CR1 se 0.0307   t 3.213 on df 10
+  95% CI [+0.0302, +0.1670]   ->  eps50 x 1.26 per decade [1.07, 1.47]
+  WER coefficient = +0.6200
+
+--- wild cluster bootstrap, Rademacher weights, H0: beta1 = 0 ---------------
+  CR1 with 11 clusters is anti-conservative; the bootstrap is the standard
+  remedy below ~30 clusters. The null is imposed by refitting without
+  log10(exposure), then resampling cluster-wise sign flips.
+  bootstrap p = 0.1878   (1877 of 9999 replications at least as extreme)
+  verdict: NOT significant at the 5% level
+
+--- leave-one-cluster-out: which runs carry the slope? ----------------------
+  With G = 11 the slope can rest on very few clusters. Dropping each in
+  turn shows how few. Note the exposure values per cluster first.
+    1h-r1        exposure [0.98]
+    1h-r2        exposure [0.98]
+    1h-s1338     exposure [0.98]
+    1h-s1339     exposure [0.98]
+    5h-r1        exposure [4.9]
+    5h-s1338     exposure [4.9]
+    5h-s1339     exposure [4.9]
+    25h-r1       exposure [24.6]
+    25h-s1338    exposure [24.6]
+    25h-s1339    exposure [24.6]
+    100h-r1      exposure [38.8, 77.7, 98.02]
+    Every exposure above 24.6 h sits in ONE cluster (100h-r1).
+
+    drop 100h-r1      beta1  +0.6473  CI [-0.2357, +1.5303]  INCLUDES 0
+    drop 1h-r1        beta1  +0.0896  CI [+0.0157, +0.1635]  excludes 0
+    drop 1h-r2        beta1  +0.1127  CI [+0.0358, +0.1896]  excludes 0
+    drop 1h-s1338     beta1  +0.1037  CI [+0.0184, +0.1889]  excludes 0
+    drop 1h-s1339     beta1  +0.1124  CI [+0.0351, +0.1897]  excludes 0
+    drop 25h-r1       beta1  +0.0984  CI [+0.0306, +0.1662]  excludes 0
+    drop 25h-s1338    beta1  +0.0987  CI [+0.0287, +0.1687]  excludes 0
+    drop 25h-s1339    beta1  +0.0995  CI [+0.0314, +0.1675]  excludes 0
+    drop 5h-r1        beta1  +0.0887  CI [+0.0156, +0.1618]  excludes 0
+    drop 5h-s1338     beta1  +0.0753  CI [+0.0251, +0.1255]  excludes 0
+    drop 5h-s1339     beta1  +0.1037  CI [+0.0272, +0.1802]  excludes 0
+
+    One cluster decides it. Drop 100h-r1 and the interval includes zero;
+    drop any of the other 10 and it does not. beta1 is identified by a
+    single training run, because that run supplies every exposure level above
+    24.6 hours. This is the same fact the bootstrap is reacting to: a sign flip
+    on one cluster moves the whole top of the range.
+
+--- two-way clustering on (training run) and (utterance) --------------------
+  The same 100 utterances appear in every run, so utterance effects are
+  crossed with run effects. Two-way: V_run + V_utt - V_intersection.
+  G_run 11, G_utt 100, G_both 1100
+  se: run-only 0.0307 | utterance-only 0.0112 | two-way 0.0282
+  beta1 +0.0986, t 3.499 on df 10, 95% CI [+0.0358, +0.1615]
+
+==============================================================================
+  4 - the same fit on run-level means, so the reader sees how few points there are
+==============================================================================
+  13 condition means, 11 independent training runs. This is the honest
+  picture of the evidence: the utterance-level n of 1300 is not that many
+  independent observations.
+  n = 13 condition means, df 10
+  beta1 = +0.0986   se 0.0521   t 1.894   95% CI [-0.0174, +0.2147]
+  NOT significant at the 5% level  (OLS on the means: treats every milestone mean as
+  an independent point, which the milestones of one run are not)
+  same fit, se clustered on training run (G = 11, df 10):
+  beta1 = +0.0986   se 0.0336   t 2.935   95% CI [+0.0238, +0.1735]   excludes 0
+
+==============================================================================
+  5 - what happens without the 100 h milestones, and with a version term
+==============================================================================
+  The 100 h milestones are the top of the exposure range and the most
+  leveraged points in the slope. They are checkpoints at steps 1000, 2000 and
+  3500 of 1 training run(s): 100h-r1. Within every such run, exposure is
+  perfectly collinear with training step, so more audio and more optimisation
+  cannot be told apart. A second run adds an independent cluster; it does NOT
+  break that collinearity, because both runs were checkpointed at the same steps.
+  The version indicator below is pre/post the library upgrade (4.44.2 vs later).
+  all 13 conditions [reported]       beta1 +0.0986  se 0.0307  df 10  CI [+0.0302, +0.1670]  excludes 0
+  10 replicate runs, no milestones   beta1 +0.6473  se 0.3904  df  9  CI [-0.2357, +1.5303]  INCLUDES 0
+  + library-version indicator        beta1 +0.1022  se 0.0371  df 10  CI [+0.0195, +0.1849]  excludes 0
+
+  Exposure in the no-milestone fit spans 0.98 to 24.6 h, a factor of 25 rather
+  than 100, so a wider interval there is expected and is not by itself evidence
+  against the slope. What matters is whether the sign and rough size survive.
+
+==============================================================================
+  6 - sensitivity to the imputation ceiling
+==============================================================================
+  517 of 1300 observations are right-censored (39.8%) and imputed at 2e-03.
+  The cheap check here is whether the slope depends on where the ceiling is
+  put; section 6b models the censoring directly.
+
+  ceiling 2e-03  beta1 +0.0986  CI [+0.0302, +0.1670]  excludes 0
+  ceiling 3e-03  beta1 +0.1200  CI [+0.0359, +0.2040]  excludes 0
+  ceiling 5e-03  beta1 +0.1469  CI [+0.0429, +0.2509]  excludes 0
+  ceiling 1e-02  beta1 +0.1834  CI [+0.0520, +0.3147]  excludes 0
+
+  The ceiling is a lower bound on the censored values, so every estimate
+  here is conservative with respect to the true (larger) eps50.
+
+--- 6b - censored-normal (Tobit) fit, clustered on the training run ---------
+  Instead of imputing, model the censoring. log10(eps50) is normal around the
+  linear predictor; a row that never reached its target contributes
+  P(y > log10 ceiling), and a success in the lowest bisection step, whose true
+  value may lie below the 1e-4 floor, contributes P(y < that step's upper edge).
+  Standard errors are a sandwich clustered on the training run.
+  779 exact | 517 right-censored at 2e-03 | 4 left-censored below 1.0981e-04
+  converged in 7 iterations, log-likelihood -900.898
+  beta1 = +0.1709 per decade   cluster se 0.0473 (model se 0.0237)   df 10
+  95% CI [+0.0654, +0.2764]  excludes 0   ->  eps50 x 1.48 per decade [1.16, 1.89]
+  WER coefficient +1.1203   residual sd 0.4509 (log10 units)
+  imputed OLS (section 3) for comparison: beta1 +0.0986
+
+  Modelling the censoring raises the slope above the imputed fit, which is
+  what section 6 implies: imputing at the ceiling understates it.
+  The cluster-robust se at this G is optimistic for the same reason as CR1;
+  read this as a sensitivity check, not a replacement for the bootstrap.
+
+==============================================================================
+  7 - are the perturbations actually inaudible, and how fine is the bisection?
+==============================================================================
+  The introduction claims the perturbations sound normal. The attack CSVs
+  carry a per-utterance SNR, so the claim can be checked rather than asserted.
+  Successful attacks only -- a censored row never reached its target.
+
+  condition           n     min  median    mean     max
+  1h final           75    28.8    41.4    41.5    52.4
+  1h run2            41    28.7    41.3    40.5    49.0
+  1h s1338           57    28.6    42.0    41.6    51.2
+  1h s1339           39    29.6    40.5    40.5    48.5
+  5h final           79    29.2    43.8    43.9    53.0
+  5h s1338           96    27.0    44.4    44.5    54.6
+  5h s1339           59    29.3    42.2    41.8    54.2
+  25h final          66    28.0    40.0    39.9    50.5
+  25h s1338          78    27.8    41.2    41.0    52.7
+  25h s1339          57    27.7    41.6    40.9    55.9
+  100h ms-1000       37    23.7    35.5    35.8    46.9
+  100h ms-2000       46    25.3    36.8    36.4    47.4
+  100h ms-3500       53    26.0    36.1    36.9    49.2
+
+  pooled (n=783): median 41.3 dB, 5th pct 30.8 dB, min 23.7 dB
+  0 of 783 successful attacks sit below 20 dB SNR (0.0%).
+  Report the distribution, not a claim. No listening test was run, so
+  'inaudible' is not supportable; 'small relative to the signal' is.
+
+  bisection bracket width (ratio hi/lo at termination):
+    min 1.0981  median 1.0981  max 1.0981
+    A median bracket of 1.098 means eps50 is resolved to about 9.8%.
+    The pooled effect is a factor of 1.26 per decade, so the resolution
+    is comfortably finer relative to the effect being measured.
+
+==============================================================================
+  8 - the unmatched ladder: single runs against replicate means
+==============================================================================
+  The paper argues the unmatched comparison 'points the wrong way' from
+  75%% at 1 h against 79%% at 5 h. That is a 4-point gap, far inside sigma. With
+  every run of each rung averaged, the same argument is made by a much wider
+  margin.
+
+  rung   runs                             single     mean
+  1      1h final, 1h run2, 1h s1338, 1h s1339    75.0%    53.0%
+  5      5h final, 5h s1338, 5h s1339      79.0%    78.0%
+  25     25h final, 25h s1338, 25h s1339    66.0%    67.0%
+
+  1 h -> 5 h as published:        +4.0 pp  (75.0 -> 79.0)
+  1 h -> 5 h on replicate means:  +25.0 pp  (53.0 -> 78.0)
+  The conclusion is unchanged and the evidence is 6.2x stronger.
+
+==============================================================================
+  done
+==============================================================================
+  Everything above is CPU-only and reproduces from the committed CSVs.
+  What it cannot do, and what therefore belongs in Limitations:
+
+    * separate training from attack variance with any precision. One re-attacked
+      checkpoint gives df 1. Three checkpoints at three PGD seeds would give a
+      usable interval, at roughly 10 GPU-hours.
+    * break the collinearity between exposure and training step at the top of
+      the range. A second 100-hour run (now included, if INCLUDE_100H_REPLICATE
+      is on) adds an independent cluster but does NOT break it: both runs were
+      checkpointed at the same steps. That needs checkpoints matched on
+      optimisation but not on audio.
+    * test attack strength properly: step size scaled with epsilon, restarts on
+      failures, longer budgets. That would change every eps50 value, so it is a
+      full re-measurement rather than an addition.
+    * a listening test for perceptibility. SNR is reported instead.
