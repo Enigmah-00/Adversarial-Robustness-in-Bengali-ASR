@@ -86,6 +86,9 @@
   log10(exposure), then resampling cluster-wise sign flips.
   bootstrap p = 0.1878   (1877 of 9999 replications at least as extreme)
   verdict: NOT significant at the 5% level
+  exact enumeration of all 2048 Rademacher sign patterns: p = 0.1908 (390)
+  Webb six-point weights, 9999 draws: p = 0.2167 (2166)
+  verdict on the exact Rademacher p: NOT significant at the 5% level
 
 --- leave-one-cluster-out: which runs carry the slope? ----------------------
   With G = 11 the slope can rest on very few clusters. Dropping each in

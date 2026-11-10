@@ -20,7 +20,7 @@ Sections, each answering one request:
   7  perturbation audibility (SNR) and bisection resolution
   8  the unmatched ladder, redone with replicate means
 """
-import csv, glob, io, json, math, os, random, sys
+import csv, glob, io, itertools, json, math, os, random, sys
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "."
 RES = os.path.join(ROOT, "data", "results")
@@ -377,6 +377,41 @@ for _ in range(B):
 p_wcb = (cnt + 1.0) / (B + 1.0)
 print("  bootstrap p = %.4f   (%d of %d replications at least as extreme)" % (p_wcb, cnt, B))
 print("  verdict: %s at the 5%% level" % ("SIGNIFICANT" if p_wcb < 0.05 else "NOT significant"))
+
+# Rademacher weights admit only 2^G distinct sign patterns. At G <= 16 that is
+# few enough to enumerate exactly, which removes simulation error from the
+# p-value. Webb six-point weights are the standard recommendation at G <= 12,
+# where Rademacher's 2^G support makes the bootstrap p-value coarse.
+_cl = sorted(set(CL))
+_Xr = [[row[0], row[2]] for row in X]
+_br, _rr, _ = ols(_Xr, Y)
+_fit = [_br[0] + _br[1] * row[2] for row in X]
+
+def _wcb_p(weight_sets):
+    cnt = tot = 0
+    for w in weight_sets:
+        ys = [_fit[i] + w[CL[i]] * _rr[i] for i in range(len(X))]
+        b2, r2, Xi2 = ols(X, ys)
+        V2, _g = cr1(X, ys, b2, r2, Xi2, CL)
+        tot += 1
+        if abs(b2[1] / V2[1][1] ** 0.5) >= abs(t) - 1e-12:
+            cnt += 1
+    return (cnt + 1.0) / (tot + 1.0), cnt, tot
+
+if len(_cl) <= 16:
+    _ex = (dict(zip(_cl, _s)) for _s in itertools.product([1.0, -1.0], repeat=len(_cl)))
+    p_exact, _c, _t = _wcb_p(_ex)
+    print("  exact enumeration of all %d Rademacher sign patterns: p = %.4f (%d)"
+          % (_t, p_exact, _c))
+else:
+    p_exact = None
+
+_W6 = [-(1.5 ** 0.5), -1.0, -(0.5 ** 0.5), (0.5 ** 0.5), 1.0, (1.5 ** 0.5)]
+_rngw = random.Random(SEED)
+p_webb, _c, _t = _wcb_p([{k: _rngw.choice(_W6) for k in _cl} for _ in range(B)])
+print("  Webb six-point weights, %d draws: p = %.4f (%d)" % (_t, p_webb, _c))
+print("  verdict on the exact Rademacher p: %s at the 5%% level"
+      % ("SIGNIFICANT" if (p_exact or p_wcb) < 0.05 else "NOT significant"))
 
 H2("leave-one-cluster-out: which runs carry the slope?")
 print("  With G = %d the slope can rest on very few clusters. Dropping each in" % len(set(CL)))

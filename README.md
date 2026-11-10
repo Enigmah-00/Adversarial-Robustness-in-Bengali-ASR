@@ -3,7 +3,7 @@
 Code, figures and provenance for:
 
 > **One Training Run Is Not Enough: Measuring How Training-Data Volume Affects
-> Adversarial Robustness in Low-Resource Speech Recognition**
+> Adversarial Robustness in Bengali Speech Recognition**
 > Mahdi Hasan Qurishi, Umme Zoayria Abedin, A.K.M. Fakhrul Hossain
 > Department of CSE, Shahjalal University of Science and Technology
 
@@ -18,21 +18,35 @@ by *iso-WER matching*: each converged low-data model is compared against an
 intermediate checkpoint of the 100-hour run that makes about the same number of
 transcription errors.
 
-Then, instead of running the experiment once, we ran it **ten times**.
+Then, instead of running the experiment once, we ran it **twelve times**.
 
-**More training audio does make the model harder to attack.** Pooling all runs
-with standard errors clustered on the training run, the smallest perturbation
-achieving verified targeted success rises by a factor of **1.26 per decade** of
-training audio at matched clean accuracy (β₁ = +0.0986, 95% CI [+0.030, +0.167],
-11 training runs, 1,300 utterance-level observations).
+**The main result is about measurement, not about data volume.** Retraining a
+condition and changing nothing but the run moves targeted attack success a lot
+at the low rungs and very little at 100 hours.
+
+**The data-volume effect is a positive estimate we cannot distinguish from
+zero.** Pooling all twelve runs with standard errors clustered on the training
+run, the smallest perturbation achieving verified targeted success rises by a
+factor of **1.23 per decade** of training audio at matched clean accuracy
+(β₁ = +0.0888, CR1 95% CI [+0.024, +0.154], 12 training runs, 1,600
+utterance-level observations). Every cluster-robust check excludes zero, but an
+exact wild cluster bootstrap — all 4,096 Rademacher sign patterns — gives
+**p = 0.059**, and Webb six-point weights give 0.053. By a wording rule fixed
+in `paper/NUMBERS.md` before that fit was run, the slope is reported as a
+positive point estimate that cannot be distinguished from zero.
 
 **No single pair of checkpoints can show this.** Retraining a condition and
 changing nothing but the run gives a between-run standard deviation in targeted
 attack success of **21.6 percentage points** (95% CI [12.2, 58.3]). A matched
 pair contrasts one run against one run, so its between-run standard error is
 30.5 points — and the three pair effects we measured are 38, 33 and 13 points,
-or 1.25, 1.08 and 0.43 times that standard error. Ten of twelve within-condition
-comparisons are statistically significant, where chance would give one.
+or 1.25, 1.08 and 0.43 times that standard error. Recomputed from *every* run
+with a Welch test, the same three comparisons are **17.5, 31.0 and 12.5
+points**, none of them significant — pair 1 loses more than half its effect,
+because the originally published 1-hour run was the most attackable of the
+four. Ten of twelve within-condition comparisons are statistically significant,
+where chance would give roughly one; those comparisons share runs, so they are
+not independent.
 
 The clearest single case is a pair we never designed: two runs of the 5-hour
 condition that agree on word error rate to **0.0035** — seventeen times tighter
@@ -48,9 +62,9 @@ both runs.**
 
 ```
 notebooks/     the full pipeline, in run order (see below)
-analysis/      make_figures.py — regenerates every figure from the reported numbers
+analysis/      reanalysis.py (standard library only) + make_figures.py; both reanalysis outputs
 figures/       the five figures in the paper, as vector PDFs
-data/          one sample result file; the rest are hosted on Kaggle (see data/README.md)
+data/          all 18 per-utterance result files, the frozen target set, derived tables, provenance
 docs/          inventory of the public Kaggle datasets
 ```
 
