@@ -229,6 +229,8 @@ def main():
          [(r[0], r[2]) for r in controlled] + [("nb05c/nb07 rescaled", rescaled)]),
         ("every pair at face value, including both confounded ones",
          [(r[0], r[2]) for r in results] + [("nb05c/nb07 raw", LEGACY_25)]),
+        ("every pair, the 25-utterance gap rescaled to n=100",
+         [(r[0], r[2]) for r in results] + [("nb05c/nb07 rescaled", rescaled)]),
     ]
     for label, gaps in sets:
         df = len(gaps)

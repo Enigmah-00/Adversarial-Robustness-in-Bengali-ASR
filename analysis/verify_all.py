@@ -286,6 +286,12 @@ _raw5 = math.sqrt(sum(g * g / 2 for g in _g5) / 5.0)
 check("primary attack sd, every pair, c4(5)-corrected", round(_raw5 / c4(5), 1), 8.1)
 check("its 95% interval", (round(_raw5 * math.sqrt(5 / 12.8325), 1), round(_raw5 * math.sqrt(5 / 0.8312), 1)),
       (4.8, 18.8))
+# The same five pairs with the 25-utterance gap rescaled to n=100 (6.0): the
+# size-adjusted reading the text reports beside the unscaled, conservative 8.1.
+_g5s = (20.00, 4.00, 0.00, 5.21, 6.00)
+_raw5s = math.sqrt(sum(g * g / 2 for g in _g5s) / 5.0)
+check("all pairs, 25-utterance gap rescaled, c4(5)-corrected", round(_raw5s / c4(5), 1), 7.3)
+check("its share of the variance (%)", round(100 * (_raw5s / c4(5)) ** 2 / SIGMA ** 2), 11)
 check("100 h rung tighter than the low rungs by", round(SIGMA / sig100, 1), 10.4)
 check("that bound is below the attack sd", sig100 < ATTACK_SD, True)
 
@@ -691,7 +697,13 @@ else:
             ("under 2\\% of that variance (14\\%", "abstract leads with the all-pairs figure"),
             ("98\\% on our primary reading", "the primary reading is now 86%"),
             ("puts the attack's own standard deviation at 2.9", "contribution leads with the all-pairs figure"),
-            ("Three degrees of freedom behind that bound", "df stated for every figure")]:
+            ("Three degrees of freedom behind that bound", "df stated for every figure"),
+            # fourth review (2026-11-18)
+            ("it is worse optimised", "fewer updates is not worse optimisation"),
+            ("had less optimisation, not more", "fewer updates is not worse optimisation"),
+            ("so a reviewer can run every check now", "reproducibility claim scoped to released files"),
+            ("The subscript records how the values are summarised", "notation rewritten"),
+            ("These are right-censored", "unresolved is not the same as censored")]:
         check("absent: %s" % why, frag in texn, False)
     for frag, why in [
             ("re-runs and all three negation edit types are publicly released",
@@ -747,8 +759,6 @@ else:
             ("about seven times the pooled $+0.089$", "no-milestone magnitude compared"),
             ("correlate at $r = -0.99$", "no-milestone collinearity stated"),
             ("only the sign of the point estimate is common to both fits", "no-milestone reading"),
-            ("The subscript records how the values are summarised", "eps50 subscript explained"),
-            ("which the search below estimates from above", "eps50 estimator direction stated"),
             ("rescaled to 100 utterances at a fixed per-utterance flip rate", "25-utterance pair rescaling stated"),
             ("would raise the 2.9 to 3.3", "primary estimate with the 25-utterance pair"),
             ("1 h, 25 utt. & 0.98 & --- & $+12.0$", "25-utterance pair shown in the table"),
@@ -767,6 +777,30 @@ else:
             ("86\\% on our primary reading and 98\\% on the version-controlled pairs", "discussion gives both shares"),
             ("the primary 8.1 also carries a pair whose version was never recorded", "limitation covers the primary"),
             ("By the training run we mean everything", "training run defined"),
+            # fourth review (2026-11-18)
+            ("\\newcommand{\\eps}{\\ensuremath{\\hat{\\varepsilon}}}", "eps macro is the per-utterance estimate"),
+            ("\\newcommand{\\epstrue}{\\ensuremath{\\varepsilon^{*}}}", "true minimum has its own symbol"),
+            ("\\newcommand{\\epsmed}{\\ensuremath{\\varepsilon_{50}}}", "median has its own symbol"),
+            ("Three quantities need keeping apart", "notation section"),
+            ("\\epstrue(u) \\;=\\; \\inf\\,\\{\\|\\delta\\|_\\infty :\\ f(x_u+\\delta) = t_u\\}", "true minimum defined"),
+            ("so $\\eps(u) \\ge \\epstrue(u)$", "estimate bounds the truth from above"),
+            ("is \\emph{unresolved}", "unresolved defined"),
+            ("bounds the median of $\\epstrue(u)$ from above", "median bound stated with its condition"),
+            ("When at least half are resolved", "median bound condition"),
+            ("the column \\texttt{eps50} in the released files", "notation tied to the file column"),
+            ("censoring in the statistical sense would mean $\\epstrue(u)$ lies above the ceiling", "censoring distinguished"),
+            ("\\log_{10}\\eps_{u,c} \\;=\\; \\beta_0 + \\beta_1\\log_{10}E_c + \\beta_2\\,\\mathrm{WER}_c + e_{u,c}",
+             "regression written on utterance-level values"),
+            ("not the 16 checkpoints' medians", "unit of observation stated"),
+            ("lower the 8.1 to 7.3, 11\\% of the variance", "size-adjusted all-pairs figure"),
+            ("We keep the unscaled 8.1 as the conservative figure", "8.1 labelled conservative"),
+            ("root-mean-square discrepancies between repeated measurements", "pooling assumption stated"),
+            ("That rules out the explanation that the high-exposure checkpoint is harder to attack because it received more updates",
+             "compute control states what it rules out"),
+            ("It does not establish that the two models were at equivalent stages of optimisation", "and what it does not"),
+            ("reproduce every analysis for which per-utterance data are released", "reproducibility claim scoped"),
+            ("One of the authors, a native speaker of Bengali and the only annotator", "annotator stated"),
+            ("were made by one of the authors; no one outside the author team annotated data", "ethics covers annotation"),
             ("five behind the primary attack figure, three behind the version-controlled one and four behind $\\sigma$",
              "df for every figure")]:
         check("present: %s" % why, frag in texn, True)
