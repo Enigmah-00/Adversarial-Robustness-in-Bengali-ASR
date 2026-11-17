@@ -62,10 +62,12 @@ both runs.**
 
 ```
 notebooks/     the full pipeline, in run order (see below)
-analysis/      reanalysis.py (standard library only) + make_figures.py; both reanalysis outputs
+analysis/      verify_all.py, attack_replication.py and reanalysis.py (standard library
+               only), make_figures.py, and the output of reanalysis.py in both configurations
 figures/       the five figures in the paper, as vector PDFs
-data/          all 18 per-utterance result files, the frozen target set, derived tables, provenance
-docs/          inventory of the public Kaggle datasets
+data/          all 36 per-utterance result and target files the paper uses, the frozen
+               target set, derived tables, provenance
+docs/          inventory of the public Kaggle datasets and notebooks
 ```
 
 ## Notebooks, in run order
@@ -86,9 +88,23 @@ docs/          inventory of the public Kaggle datasets
 | **`NB-15-clean-wer-replicates`** | **clean WER for every replicate — the ANCOVA covariate** | T4 | ~4 min per checkpoint |
 | **`NB-16-eps50-replicates`** | **ε₅₀ on the replicates, plus the variance analysis** | T4 | ~4.6 h per condition |
 | **`NB-17-variance-components`** | **σ, the run-clustered ANCOVA, the power table** | **CPU** | ~30 s |
+| `NB-18-determinism-control` | a forced-determinism control, built but never run | T4 | — |
+| `NB-19-train-100h-replicate` | trains the 100-hour replicate at seed 1338 | T4 | 3.1 h |
+| `NB-20-clean-wer-100h-replicate` | clean WER for the 100-hour replicate's checkpoints | T4 | 0.35 h |
+| `NB-21-eps50-100h-replicate` | ε₅₀ on the 100-hour replicate's three milestones | T4 | three sessions, 18.7 h |
+| `NB-22-reanalysis-with-100h-replicate` | the pooled fit with the 100-hour replicate | CPU | — |
+| `NB-23-attack-seed-replicates` | re-attacks byte-identical weights with a new attack seed | T4 ×2 | two sessions, 16.7 h |
+| `NB-24-attack-strength-check` | a stronger search on the 1-hour model's censored utterances | T4 | 12.0 h, stopped at the session limit |
+| `NB-24b-false-negative-rate` | the same search at 24.6 and 98.0 hours of exposure | T4 ×2 | 8.9 h |
+| `NB-25-margin-covariate` | the decoder's confidence margin, forward passes only | T4 | — |
+| `NB-26-negation-control` | the matched non-negation deletion (T6) on two models | T4 ×2 | 4.3 h |
+| `NB-27-finish-100h-final` | the last 20 utterances of the 100-hour final | T4 | — |
 
 The four in bold are the replication study. Everything above them is the
-original single-run experiment they correct.
+original single-run experiment they correct. Everything below them came
+later: the 100-hour replicate (NB-19 to NB-22), checks on the attack itself
+(NB-23 to NB-25), the negation control (NB-26) and the completion of the
+100-hour final (NB-27). NB-18 was built but never run.
 
 ### Reproducing the replication study
 
@@ -107,15 +123,29 @@ original single-run experiment they correct.
    computing anything new. If that check fails, stop.
 
 Total: about 50 GPU-hours. Every run in this study was performed on Kaggle's
-free tier; the study cost nothing in paid compute.
+free tier.
 
 ---
 
 ## Data
 
-Model checkpoints and per-utterance results are too large for Git and live on
-Kaggle. See [`data/README.md`](data/README.md) for the inventory, and
-[`docs/kaggle-inventory.md`](docs/kaggle-inventory.md) for the dataset slugs.
+Model checkpoints are too large for Git and live on Kaggle. Every per-utterance
+result file the paper uses is in [`data/results/`](data/results/); see
+[`data/README.md`](data/README.md) for what each holds, and
+[`docs/kaggle-inventory.md`](docs/kaggle-inventory.md) for the original Kaggle
+datasets and notebooks.
+
+### Checking the numbers
+
+```bash
+python3 analysis/verify_all.py .        # the paper's figures, from data/results/ (seconds)
+python3 analysis/attack_replication.py  # the re-attacks of byte-identical weights
+python3 analysis/reanalysis.py .        # pooled fit, variance and censoring analysis (~6 min)
+```
+
+All three use only the Python standard library. `verify_all.py` exits non-zero
+if any figure disagrees; its checks on the manuscript text are skipped here,
+because the manuscript is not in this repository.
 
 ### Integrity: the frozen target set
 
@@ -162,6 +192,11 @@ between-run σ is pooled within environment.
 | `numpy` | 2.0.2 | 2.1.3 |
 | Python | 3.11 | 3.13 |
 
+Later notebooks ran under newer versions again: `transformers` 5.0.0 for NB-12
+and NB-13, and 5.20.2 for, among others, the 100-hour replicate and NB-23 and
+NB-26. Each run's provenance record names its own versions, and where a
+comparison in the paper crosses a version change, the paper says so.
+
 Training is **not** deterministic at a fixed seed here, and we did not configure
 it to be: mixed precision is enabled, `cudnn.benchmark` is left on so kernel
 selection is autotuned by timing, and two dataloader workers interleave. Those
@@ -180,7 +215,7 @@ carefully, because the paper's central finding is that training this model is
 | level | reproducible? | evidence |
 |---|---|---|
 | **Analysis** — same result files in, same numbers out | **Exactly** | `NB-17` refits the two previously published coefficients (+0.1517 and +0.1007) to four decimal places from the raw files, every run, before computing anything new |
-| **Measurement** — same model weights, attack it again | **Within ~12 points** | two attacks on byte-identical weights whose clean WER agreed to four decimal places differed by 12 points of attack success |
+| **Measurement** — same model weights, attack it again | **To a standard deviation of 8.1 points** | five re-attacks of byte-identical weights, with gaps of 0 to 20 points (2.9 points from the three version-controlled pairs alone); in those three, where both attacks succeed, the median ε₅₀ disagreement is one bisection bracket |
 | **Training** — same recipe, same seed, train again | **No** | 21.6 points of standard deviation; two runs at the *same* seed differed by 34 points |
 
 So: **do not expect to reproduce 96%, or 59%, or any individual number in our

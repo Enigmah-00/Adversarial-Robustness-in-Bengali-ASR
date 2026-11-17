@@ -1,0 +1,26 @@
+utt_id,tag,rung,checkpoint,duration,was_censored,now_success,restart_used,steps_used,eps,snr_db,decoded,model_dir
+f45c9b5db0d5,rung1-final,1,final,4.9035,True,True,0,350,0.002,31.785898208618164,"পিতা ডা. জেমস অ্যান্ডারসন এম. ডি, মাতা এলেন গার্সটিন।",/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+01984ba63da8,rung1-final,1,final,3.7155,True,True,0,900,0.002,38.06862258911133,জওহরলাল নেহরু ও গান্ধী উভয়কেই কারারুদ্ধ করা হয়।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+da6f6af363ca,rung1-final,1,final,5.8755,True,True,0,300,0.002,40.648502349853516,বাসা প্রকৃতির সাথে এমনভাবে মিশে থাকে যে হঠাৎ শনাক্ত করা বেশ কষ্টকর।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+04d76fa094d3,rung1-final,1,final,6.6675,True,True,0,300,0.002,38.93934631347656,এই অলিম্পিকের প্রাথমিক বাছাই পর্বের হিটে আট জনের মাঝে অষ্টম হন তিনি।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+5528ae4fd84e,rung1-final,1,final,6.7755,True,True,0,200,0.002,36.2684211730957,সেখানে তিনি ক্যাব চালকের ভূমিকায় অবতীর্ণ হয়েছেন।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+4bdf58bd8e1c,rung1-final,1,final,3.4635,True,True,1,900,0.002,37.90911102294922,এরা ঝাঁক বেঁধে আকাশে উড়ে বেড়ায়।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+86fe4a267db9,rung1-final,1,final,3.6075,True,True,1,1850,0.002,37.57829284667969,প্রকৃতি যেন নিজ হাতে দ্বীপটিকে সাজিয়ে তুলেছে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+219228fe3cdd,rung1-final,1,final,3.5355,True,False,-1,10000,0.002,,,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+82e1ca576ecf,rung1-final,1,final,4.1835,True,True,1,200,0.002,39.86241912841797,বাংলাদেশে বনায়নের এক বিরাট সম্ভাবনা রয়েছে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+9f7f11baf658,rung1-final,1,final,3.8235,True,True,0,550,0.002,32.76941680908203,ছবিটি এমসিইউ-এর চতুর্থ পর্বের অংশ হবে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+824b7f8281f1,rung1-final,1,final,4.7955,True,True,1,200,0.002,25.521135330200195,কিন্তু এই প্রকল্পটি কখনোই বেশি জনপ্রিয়তা অর্জন করে নি।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+8fb0c8abefe4,rung1-final,1,final,5.31565625,True,True,0,300,0.002,36.651947021484375,এরফলে পরবর্তীকালে কোম্পানির প্রশাসনে স্থিরতা এসেছে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+742aa8b48817,rung1-final,1,final,4.7235,True,True,1,200,0.002,33.07726287841797,বেহালা কলকাতার দক্ষিণে অবস্থিত একটি অঞ্চল।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+49ea01e164e4,rung1-final,1,final,5.2635,True,True,2,1700,0.002,38.52818298339844,সমগ্র খেলোয়াড়ী জীবনে দুইটিমাত্র শতরানের ইনিংস খেলেছেন।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+b53869e2749c,rung1-final,1,final,5.6235,True,True,0,150,0.002,38.403175354003906,এটি রামাল্লায় থেকে বারো কিলোমিটার উত্তরে অবস্থিত।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+833f9edf0446,rung1-final,1,final,5.9835,True,False,-1,10000,0.002,,,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+30157fc0bda8,rung1-final,1,final,6.1275,True,True,1,250,0.002,36.92401885986328,তাদের অনুধাবন ও তাত্ত্বিক অবস্থানের মধ্যে তারতম্য রয়েছে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+2ec0b75ad4f3,rung1-final,1,final,6.3075,True,True,2,950,0.002,37.69346618652344,"রাজৈর উপজেলার কেন্দ্র থেকে দক্ষিণে গোপালগঞ্জ, পূর্বে মাদারীপুর জেলা সদর অবস্থিত।",/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+fde774dcabaf,rung1-final,1,final,5.6235,True,True,0,100,0.002,33.53513717651367,এই দম্পতির তিন বছর আগেই একটি পুত্রসন্তান হয়েছিল।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+3bb18357c718,rung1-final,1,final,6.8475,True,True,0,150,0.002,27.2861328125,তিনি চট্টগ্রাম দক্ষিণ জেলা মহিলা আওয়ামীলীগের সাবেক সাধারণ সম্পাদক।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+017c67ca09ac,rung1-final,1,final,7.0635,True,True,0,950,0.002,40.522621154785156,তারপর কয়েকটি বাড়ি ঘর পেরিয়ে রাস্তাটি কৃষিজমির পাশ দিয়ে দক্ষিণ দিকে চলতে থাকে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+cc778adf8c66,rung1-final,1,final,6.8835,True,True,2,100,0.002,29.228342056274414,গণতন্ত্রের দিকে ধাবিত করার ফলে দলীয় প্রধান হিসেবে নির্বাচনে জয়ী হয়ে হুন সেন প্রধানমন্ত্রী হন।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+5ded570ac2bd,rung1-final,1,final,6.4155,True,False,-1,10000,0.002,,,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+1323bfb3c4ec,rung1-final,1,final,6.8115,True,True,0,200,0.002,31.72901153564453,এটি আধুনিক চিকিৎসা বিজ্ঞানের যুগান্তকারী ব্যবহার বলে সর্বস্বীকৃত।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final
+9980c302c0c3,rung1-final,1,final,6.50365625,True,True,0,200,0.002,33.91754150390625,এতে বর্তমানে ছেলে এবং মেয়েদের পৃথক পৃথক ভবন রয়েছে।,/kaggle/input/datasets/mahdihasanqurishi/ckpt-xlsr-1h/final

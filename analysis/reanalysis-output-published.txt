@@ -132,6 +132,96 @@
   beta1 +0.0986, t 3.499 on df 10, 95% CI [+0.0358, +0.1615]
 
 ==============================================================================
+  3b - the same fit with NB-25's decision margin added
+==============================================================================
+  margins_n100.csv: 1600 (checkpoint, utterance) rows over 16 checkpoints
+  conditions in the fit with a margin: 13 of 13
+
+--- is the margin collinear with exposure? ----------------------------------
+  The milestone checkpoints supply every exposure above 24.6 h AND every
+  low margin. If those two facts are the same fact, the design cannot tell
+  exposure from margin and a wide interval is the honest answer, not a null.
+
+  checkpoint-level Pearson r over 13 checkpoints:
+    log10(hours) vs margin_mean   -0.889
+    log10(hours) vs margin_p10    -0.695
+    log10(hours) vs entropy       +0.611
+    log10(hours) vs clean WER     -0.564
+    clean WER    vs margin_mean   +0.195
+
+--- spec A - published spec, no margin (reference on the same conditions) ---
+  n = 1300, G = 11 clusters, k = 3 regressors
+  beta1 (log10 exposure) = +0.0986   CR1 se 0.0307   t 3.213 on df 10
+  95% CI [+0.0302, +0.1670]  ->  eps50 x 1.26 per decade [1.07, 1.47]
+  clean-WER coefficient  = +0.6200
+  VIF  log10(hours) 1.47 | clean WER 1.47
+  wild cluster bootstrap, exact over all 2048 sign patterns: p = 0.1908
+  verdict: NOT significant at the 5% level
+  leave-one-cluster-out: zero enters when dropping 100h-r1
+
+--- spec B - + checkpoint-mean margin  (the direct analogue of clean WER) ---
+  n = 1300, G = 11 clusters, k = 4 regressors
+  beta1 (log10 exposure) = +0.0056   CR1 se 0.2230   t 0.025 on df 10
+  95% CI [-0.4913, +0.5025]  ->  eps50 x 1.01 per decade [0.32, 3.18]
+  clean-WER coefficient  = +0.4289
+  margin_mean coefficient = -0.0261   CR1 se 0.0652   t -0.400
+  VIF  log10(hours) 19.87 | clean WER 4.32 | margin_mean 14.08
+  wild cluster bootstrap, exact over all 2048 sign patterns: p = 0.9756
+  verdict: NOT significant at the 5% level
+  leave-one-cluster-out: zero enters when dropping 1h-r1, 1h-r2, 1h-s1338, 1h-s1339, 25h-r1, 25h-s1338, 25h-s1339, 5h-r1, 5h-s1339
+
+--- spec C - + per-utterance margin  (absorbs utterance difficulty too) -----
+  n = 1300, G = 11 clusters, k = 4 regressors
+  beta1 (log10 exposure) = -0.0512   CR1 se 0.0830   t -0.618 on df 10
+  95% CI [-0.2361, +0.1336]  ->  eps50 x 0.89 per decade [0.58, 1.36]
+  clean-WER coefficient  = +0.3121
+  margin(utt) coefficient = -0.0420   CR1 se 0.0257   t -1.638
+  VIF  log10(hours) 7.93 | clean WER 2.47 | margin(utt) 5.60
+  wild cluster bootstrap, exact over all 2048 sign patterns: p = 0.6515
+  verdict: NOT significant at the 5% level
+  leave-one-cluster-out: zero enters when dropping 100h-r1, 1h-r1, 1h-r2, 1h-s1338, 1h-s1339, 25h-r1, 25h-s1338, 25h-s1339, 5h-r1, 5h-s1338, 5h-s1339
+
+--- spec D - + checkpoint-mean margin_p10  (the hardest decile of frames) ---
+  n = 1300, G = 11 clusters, k = 4 regressors
+  beta1 (log10 exposure) = -0.0260   CR1 se 0.1755   t -0.148 on df 10
+  95% CI [-0.4170, +0.3650]  ->  eps50 x 0.94 per decade [0.38, 2.32]
+  clean-WER coefficient  = +0.1719
+  margin_p10 coefficient = -0.0614   CR1 se 0.0913   t -0.673
+  VIF  log10(hours) 14.70 | clean WER 7.75 | margin_p10 10.23
+  wild cluster bootstrap, exact over all 2048 sign patterns: p = 0.9551
+  verdict: NOT significant at the 5% level
+  leave-one-cluster-out: zero enters when dropping 100h-r1, 1h-r1, 1h-r2, 1h-s1338, 1h-s1339, 25h-r1, 25h-s1338, 25h-s1339, 5h-r1, 5h-s1338, 5h-s1339
+
+--- spec E - + checkpoint-mean output entropy -------------------------------
+  n = 1300, G = 11 clusters, k = 4 regressors
+  beta1 (log10 exposure) = +0.5204   CR1 se 0.2562   t 2.031 on df 10
+  95% CI [-0.0504, +1.0913]  ->  eps50 x 3.31 per decade [0.89, 12.34]
+  clean-WER coefficient  = +2.4384
+  entropy coefficient    = -4.2654   CR1 se 2.4795   t -1.720
+  VIF  log10(hours) 72.96 | clean WER 50.29 | entropy 54.68
+  wild cluster bootstrap, exact over all 2048 sign patterns: p = 0.2689
+  verdict: NOT significant at the 5% level
+  leave-one-cluster-out: zero enters when dropping 100h-r1, 1h-r1, 1h-r2, 1h-s1338, 1h-s1339, 25h-r1, 25h-s1338, 5h-r1, 5h-s1339
+
+--- summary: does the exposure slope survive the margin? --------------------
+  spec                                               beta1  x/decade             95% CI   WCB p
+  spec A published spec, no margin (reference o    +0.0986      1.26  [+0.0302,+0.1670]  0.1908
+  spec B + checkpoint-mean margin  (the direct     +0.0056      1.01  [-0.4913,+0.5025]  0.9756
+  spec C + per-utterance margin  (absorbs utter    -0.0512      0.89  [-0.2361,+0.1336]  0.6515
+  spec D + checkpoint-mean margin_p10  (the har    -0.0260      0.94  [-0.4170,+0.3650]  0.9551
+  spec E + checkpoint-mean output entropy          +0.5204      3.31  [-0.0504,+1.0913]  0.2689
+
+  Adding the checkpoint-mean margin moves beta1 from +0.0986 to +0.0056,
+  a change of -94.3% of the reference estimate, and the CR1 standard
+  error goes 0.0307 -> 0.2230 (VIF on log10(hours) 1.47 -> 19.87).
+  2 of the 4 margin specs keep beta1's sign; 0 of 5 specs reach
+  p < 0.05 on the exact bootstrap.
+
+  Read it this way. The pre-registered rule in paper/NUMBERS.md fixes the
+  wording from the exact bootstrap p, so apply that rule to the spec the
+  review asked for (spec B), not to spec A.
+
+==============================================================================
   4 - the same fit on run-level means, so the reader sees how few points there are
 ==============================================================================
   13 condition means, 11 independent training runs. This is the honest
@@ -196,6 +286,167 @@
   read this as a sensitivity check, not a replacement for the bootstrap.
 
 ==============================================================================
+  6c - NB-24: censored rows are mostly FALSE NEGATIVES, not resistant
+==============================================================================
+  Sections 6 and 6b both assume a censored row's true eps50 lies ABOVE the
+  ceiling, so imputing at the ceiling is conservative. NB-24 re-attacked the
+  censored utterances of rung1-final with a deliberately stronger attack --
+  fp32, 5 restarts, 2000 steps, no stall rule, same learning rate at the
+  ceiling -- and 22 of 25 of them SUCCEEDED. Their true eps50 is at or below
+  2e-3, not above it.
+
+  That inverts the direction of the sensitivity analysis. Section 6 sweeps the
+  ceiling up and finds the slope rising; the sweep that matters goes down.
+
+  517 of 1300 observations (39.8%) carry an imputed value.
+  Per-condition censoring, which is what makes the bias differential:
+    1h final                       0.98 h    25/100 censored (25.0%)
+    1h run2                        0.98 h    59/100 censored (59.0%)
+    1h s1338                       0.98 h    43/100 censored (43.0%)
+    1h s1339                       0.98 h    61/100 censored (61.0%)
+    5h final                       4.90 h    21/100 censored (21.0%)
+    5h s1338                       4.90 h     4/100 censored ( 4.0%)
+    5h s1339                       4.90 h    41/100 censored (41.0%)
+    25h final                     24.60 h    34/100 censored (34.0%)
+    25h s1338                     24.60 h    22/100 censored (22.0%)
+    25h s1339                     24.60 h    43/100 censored (43.0%)
+    100h ms-1000                  38.80 h    63/100 censored (63.0%)
+    100h ms-2000                  77.70 h    54/100 censored (54.0%)
+    100h ms-3500                  98.02 h    47/100 censored (47.0%)
+
+--- 6c-1 - impute censored rows BELOW the ceiling, not above it -------------
+  A flat sweep, transparent and assumption-free: every censored row is
+  imputed at a fixed fraction of the ceiling.
+
+    fraction  imputed at    beta1     95% CI            x/decade   WCB p
+      1.00    2.00e-03   +0.0986  [+0.0302,+0.1670]    1.26x   0.1908
+      0.75    1.50e-03   +0.0835  [+0.0260,+0.1410]    1.21x   0.1908
+      0.50    1.00e-03   +0.0622  [+0.0195,+0.1048]    1.15x   0.2016
+      0.35    7.00e-04   +0.0434  [+0.0127,+0.0741]    1.11x   0.2289
+      0.25    5.00e-04   +0.0257  [+0.0036,+0.0478]    1.06x   0.2074
+
+--- 6c-2 - a false-negative mixture at the measured rate --------------------
+  With probability phi a censored row is a false negative and behaves like
+  the successes actually measured on that same checkpoint; otherwise it sits
+  at the ceiling. The expected log10 value is the geometric interpolation
+  phi*log10(median success) + (1-phi)*log10(ceiling), which is exactly what a
+  regression on log10 needs and introduces no RNG.
+
+  phi = 0 reproduces the published fit. phi = 0.88 is NB-24's measured rate at
+  rung1-final.
+
+    phi     beta1     95% CI            x/decade   WCB p
+    0.00   +0.0986  [+0.0302,+0.1670]    1.26x   0.1908
+    0.25   +0.0965  [+0.0358,+0.1571]    1.25x   0.1635
+    0.50   +0.0943  [+0.0412,+0.1474]    1.24x   0.1410
+    0.88   +0.0911  [+0.0488,+0.1333]    1.23x   0.0854
+    1.00   +0.0900  [+0.0509,+0.1291]    1.23x   0.0678
+
+--- 6c-3 - how different would the rate have to be to overturn the sign? ----
+  A uniform false-negative rate attenuates the slope. A rate that DIFFERS
+  with exposure confounds it, because the correction then moves the two ends of
+  the ladder by different amounts. NB-24 measured 22/25 at 0.98 h and only
+  reached 2/4 at the 100 h milestone before the session was killed, which
+  settles nothing: those intervals are [0.70,0.96] and [0.15,0.85].
+
+  Here the low-exposure conditions (below the median exposure) take phi_lo and
+  the high-exposure ones phi_hi. Correcting the LOW end harder raises the
+  slope; correcting the HIGH end harder lowers it.
+
+  split at 4.90 h: 4 conditions below, 9 at or above
+
+    phi_lo  phi_hi    beta1     95% CI            WCB p
+     0.88    0.88    +0.0911  [+0.0488,+0.1333]   0.0854
+     0.88    0.50    +0.1232  [+0.0787,+0.1678]   0.0581
+     0.88    0.25    +0.1444  [+0.0973,+0.1915]   0.0503
+     0.88    0.00    +0.1656  [+0.1152,+0.2160]   0.0425
+     0.50    0.88    +0.0622  [+0.0100,+0.1143]   0.2064
+     0.25    0.88    +0.0431  [-0.0160,+0.1023]   0.2875   CI INCLUDES 0
+     0.00    0.88    +0.0241  [-0.0423,+0.0905]   0.4963   CI INCLUDES 0
+
+--- 6c-4 - the breaking point -----------------------------------------------
+  Holding phi_lo at NB-24's measured 0.88, how large must phi_hi be
+  before the point estimate reaches zero?
+
+    beta1 does not reach zero anywhere on phi_hi in [0, 1] with
+    phi_lo = 0.88. With the low-exposure rate at its measured value,
+    censoring alone cannot flip the sign; the phi_lo = 0.00 row of
+    6c-3 shows that a much lower low-exposure rate could.
+
+--- 6c-5 - only the 1-hour runs held at 0.88; no rate assumed at 5 hours ----
+  6c-3 and 6c-4 give the 5-hour runs phi_lo because they sit below the
+  median exposure, but no 5-hour run was ever re-attacked. Here only the four
+  1-hour runs keep 0.88, the rate measured on one of them. beta1 is affine in
+  each group's rate, because the imputed log10 value is linear in phi and OLS
+  is linear in y, so its extremes over [0, 1] lie at the ends, which both
+  grids include.
+
+    one rate shared by every other run, 0 to 1:   beta1 +0.0809 to +0.1656
+    5-hour runs and the longer runs each free:   lowest beta1 +0.0542 (5 h at 0.00, the rest at 1.00)
+    No such rate makes beta1 negative.
+
+  What this does and does not settle. It does not rescue the slope: the
+  published point estimate is biased upward, because 42% of the observations
+  are imputed on an assumption that is wrong most of the time where it has been
+  tested. It does bound the damage, and it names the one measurement that would
+  close the question -- the false-negative rate at high exposure, on a sample
+  large enough to have an interval. NB-24 as written cannot deliver that
+  affordably: a non-flip costs about two GPU-hours, so the 47 censored rows of
+  rung100-ms3500 are roughly 47 GPU-hours. A capped budget on a sample of 16
+  gives the rate to about +/-12 points for about 2 GPU-hours per checkpoint.
+
+==============================================================================
+  6d - NB-24b: the measured rate falls with exposure, and what that does
+==============================================================================
+  Section 6c had to sweep the false-negative rate on a grid because only one
+  checkpoint had been re-attacked. NB-24b measured two more at a budget of 3
+  restarts x 2000 steps, which reproduces every flip NB-24's 5 x 2000 found.
+  checkpoint        exposure   flipped     rate   Wilson 95%       deepest flip
+  rung1-final          0.98h    22/25     88.0%   [70.0, 95.8]       950 of 2000 (48%)
+  rung25-final        24.60h    13/16     81.2%   [57.0, 93.4]      1350 of 2000 (68%)
+  rung100-ms3500      98.02h     9/16     56.2%   [33.2, 76.9]      1800 of 2000 (90%)
+
+--- 6d-1 - is the rate really falling, or is the budget biting unevenly? ----
+  Fisher exact on the extremes, 88% against 56%: p = 0.0301
+  Cochran-Armitage trend over log10 exposure: z = -2.095, p = 0.0362
+
+  Both say the rate falls with exposure, with the utterance as the unit. Each
+  exposure is one checkpoint, so neither is a result about exposure, and
+  neither settles it, because the 2000-step budget is not equally binding at
+  the three checkpoints. The deepest restart-0 flip used 48% of the budget at
+  0.98 h, 68% at 24.60 h and 90% at 98.02 h, and only the last had a restart-0
+  flip still arriving past step 1500. On restart 0 the low-exposure searches
+  had stopped finding successes well before the limit and the high-exposure
+  one had not, so 56% is a looser lower bound than 88% is. (Later restarts did
+  still succeed late at the lower exposures, at 1850 and 1900 steps.) Part of
+  the measured fall may be the budget. We therefore do not report a rate
+  function -- we bracket the slope between the measured rates and a uniform
+  rate.
+
+--- 6d-2 - refitting beta1 between those two readings -----------------------
+  reading                                      beta1  95% CI               x/dec  WCB p
+  published: censored imputed at the ceiling +0.0986  [+0.0302,+0.1670]   1.26x  0.1908
+  uniform at the 0.98 h rate, 0.88           +0.0911  [+0.0488,+0.1333]   1.23x  0.0854
+  the measured rates, interpolated           +0.1151  [+0.0722,+0.1581]   1.30x  0.0532
+    measured, each at its Wilson lower       +0.1220  [+0.0736,+0.1705]   1.32x  0.0571
+    measured, each at its Wilson upper       +0.1043  [+0.0638,+0.1447]   1.27x  0.0571
+
+  The published fit is the one the paper reports. If the false-negative rate
+  falls with exposure as measured, correcting the censoring moves beta1 UP:
+  the ceiling would be propping up the low-exposure end more than the
+  high-exposure end, flattening the slope. A uniform rate moves it slightly
+  down. Every reading above is positive and none has an interval covering
+  zero.
+  bracket on beta1 from this evidence: +0.0911 (uniform) to +0.1151 (as measured),
+  against +0.0986 published. Neither end changes its sign; 6c-3 shows the
+  readings outside the bracket that could.
+
+  Reported position: the published specification stays primary, because the
+  wording rule of section 3 was fixed on it. This is a sensitivity analysis,
+  and its upper reading favours the paper -- a reason to be careful with it,
+  not a reason to promote it.
+
+==============================================================================
   7 - are the perturbations actually inaudible, and how fine is the bisection?
 ==============================================================================
   The introduction claims the perturbations sound normal. The attack CSVs
@@ -232,7 +483,7 @@
   8 - the unmatched ladder: single runs against replicate means
 ==============================================================================
   The paper argues the unmatched comparison 'points the wrong way' from
-  75%% at 1 h against 79%% at 5 h. That is a 4-point gap, far inside sigma. With
+  75% at 1 h against 79% at 5 h. That is a 4-point gap, far inside sigma. With
   every run of each rung averaged, the same argument is made by a much wider
   margin.
 

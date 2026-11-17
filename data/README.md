@@ -4,11 +4,27 @@ Per-utterance attack results, the frozen target set, and the provenance record
 for every run. Model checkpoints are 5–8.8 GB each and stay on Kaggle; see
 [`../docs/kaggle-inventory.md`](../docs/kaggle-inventory.md).
 
+`python3 analysis/verify_all.py .`, run from the repository root, re-derives
+from these files the figures the paper quotes and exits non-zero if any one
+disagrees. Its checks on the manuscript text are skipped here, because the
+manuscript is not in this repository.
+
 ## Layout
 
 ```
 targets/task_b_targets_n100.csv    the frozen attack targets
-results/eps50_*.csv                one file per attacked checkpoint, 100 rows each
+results/eps50_*_T5_n100.csv        one file per attacked checkpoint, 100 rows each
+results/attackrep_*.csv            re-attacks of byte-identical weights (NB-23)
+results/strength_*.csv             stronger-search re-attacks of censored utterances (NB-24, NB-24b)
+results/margins_*.csv              decoder confidence margins (NB-25)
+results/eps50_*_T1_n38.csv         negation: deletion of the particle, 38 utterances
+results/eps50_*_T5_n38.csv         negation: full retarget of the same 38
+results/eps50_*_T6_n38.csv         negation: the matched non-negation deletion control (NB-26)
+results/attack_eval_t1.csv         the 38 negation utterances
+results/bn_attack_targets.csv      their T1 and T5 targets
+results/t6_targets_n38.csv         their T6 targets
+results/t1_pairs_validated.csv     the native speaker's decision on each candidate shown:
+                                   y accepted, n rejected, blank never decided (one row)
 provenance/*.json                  package versions, GPU, seed and config per run
 ```
 
@@ -45,7 +61,10 @@ Each file reproduces the attack-success figure reported in the paper:
 | `eps50_rung25-s1338_T5_n100.csv` | 78.0% |
 | `eps50_rung25-s1339_T5_n100.csv` | 57.0% |
 | `eps50_rung1-trajfinal_T5_n100.csv` | 41.0% |
-| `eps50_rung100-final_T5_n100.csv` | 46.25% (80 of 100 utterances) |
+| `eps50_rung100-s1338-ms1000_T5_n100.csv` | 34.0% |
+| `eps50_rung100-s1338-ms2000_T5_n100.csv` | 48.0% |
+| `eps50_rung100-s1338-ms3500_T5_n100.csv` | 56.0% |
+| `eps50_rung100-final_T5_n100.csv` | 44.0% (outside the pooled fit; reported descriptively) |
 
 Attack success is the share of rows with `censored == False`:
 
@@ -106,15 +125,43 @@ The pooled fit recorded in `tables.tex`:
 beta1 = +0.0986  CI [+0.0302, +0.1670]  (G=11 training runs, N=1300, df=10)
 ```
 
+That fit predates the 100-hour replicate. The paper's pooled fit adds it and
+comes from `analysis/reanalysis.py`:
+
+```
+beta1 = +0.0888  CR1 CI [+0.024, +0.154]  (G=12 training runs, N=1600, df=11)
+```
+
+## The re-attack, stronger-search, margin and negation files
+
+* `attackrep_*.csv` re-attack three replicate checkpoints with a different
+  attack seed. They have the schema below plus `attack_seed`, `steps_total`,
+  `n_stall` and `n_stepcap`. `analysis/attack_replication.py` compares each
+  with its first measurement.
+* `strength_*.csv` hold one row per censored utterance that was re-attacked:
+  `was_censored`, `now_success`, `restart_used`, `steps_used` and the `eps`
+  reached. NB-24b's two files add `within_published_budget`, `n_restarts`,
+  `strong_steps`, `sampled_from` and `sample_seed`.
+* `margins_n100.csv` gives one row per checkpoint and utterance: CTC loss on
+  the reference and the decoder's per-frame margin, entropy and blank share.
+  `margins_by_checkpoint.csv` averages it per checkpoint.
+* The `_n38` files follow the schema below for the 38 negation utterances. T1
+  and T6 were searched over [1e-5, 2e-3] in six rounds, T5 over [1e-4, 2e-3] in
+  five; `bracket_width` records each. The T6 files add `tag`, `neg_token` and
+  `ctl_token`, and the 1-hour T1 and T5 files add `eps_lo` and `eps_hi`. The T6
+  runs used newer library versions than the T1 and T5 runs they are compared
+  with.
+
 ## Schema
 
-One row per attacked utterance, 100 rows per condition.
+One row per attacked utterance, 100 rows per condition (38 in the negation
+files).
 
 | column | meaning |
 |---|---|
 | `utt_id` | utterance identifier; **join on this, never on row position** — files are duration-sorted |
 | `rung` | training rung in hours |
-| `edit_type` | `T5` full retarget, `T1` negation deletion |
+| `edit_type` | `T5` full retarget, `T1` negation deletion, `T6` matched non-negation deletion |
 | `checkpoint` | `final` or `milestone-N` |
 | `duration` | clip length, seconds |
 | `source_text` / `target_text` | true transcript, attacker's target |
